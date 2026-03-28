@@ -429,7 +429,7 @@ var R = (function() {
     else{ document.getElementById('page-title').textContent='Todas las recetas'; document.getElementById('page-subtitle').textContent=recipes.length+' receta'+(recipes.length!==1?'s':'')+' en tu colección'; }
     if(filtered.length===0){ grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="big">'+(currentView==='favs'?'❤️':'🍽️')+'</div><p>'+(currentView==='favs'?'Aún no tienes favoritas.<br>Abre una receta y pulsa el corazón.':'No hay recetas todavía.<br>¡Añade la primera!')+'</p></div>'; return; }
     grid.innerHTML=filtered.map(function(r){
-      var img=r.imageUrl?'<img src="'+r.imageUrl+'" style="width:100%;height:100%;object-fit:cover;">':(r.emoji||'🍽️');
+      var img=r.imageUrl?'<img src="'+r.imageUrl+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\''+(r.emoji||'🍽️')+'\'">':(r.emoji||'🍽️');
       var tags=(r.tags||[]).slice(0,2).map(function(t){return '<span class="card-tag">'+t+'</span>';}).join('');
       var srcRow=r.sourceUrl?'<div class="card-source"><span class="card-source-url">🔗 '+r.sourceUrl+'</span><button class="card-copy-btn" data-url="'+r.sourceUrl+'" data-copy>Copiar</button></div>':'';
       return '<div class="recipe-card" data-id="'+r.id+'"><div class="card-img">'+img+'</div><div class="card-body"><div class="card-tags">'+tags+'</div><div class="card-title">'+r.name+'</div><div class="card-meta"><span>'+(r.mainIng||'')+' · '+totalTime(r)+' min</span><button class="fav-btn" data-fav="'+r.id+'">'+(r.fav?'❤️':'🤍')+'</button></div>'+srcRow+'</div></div>';
