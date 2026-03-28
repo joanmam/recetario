@@ -262,6 +262,11 @@
         <textarea class="form-textarea" id="f-notes" placeholder="Trucos, variaciones, maridajes..."></textarea>
       </div>
       <div class="form-group">
+        <label class="form-label">Foto de la receta (URL de imagen)</label>
+        <input class="form-input" id="f-image" placeholder="https://... (pega aquí la URL de una foto)" />
+        <div id="f-image-preview" style="margin-top:0.5rem;display:none;"><img style="width:100%;max-height:180px;object-fit:cover;border-radius:var(--radius-sm);" id="f-image-img" /></div>
+      </div>
+      <div class="form-group">
         <label class="form-label">Enlace original (opcional)</label>
         <input class="form-input" id="f-source" placeholder="https://..." />
       </div>
@@ -502,7 +507,9 @@ var R = (function() {
     var r=recipes.find(function(r){return r.id===id;}); if(!r) return;
     editingId=id; document.getElementById('form-modal-title').textContent='Editar receta'; document.getElementById('delete-btn').style.display='block';
     clearForm();
-    document.getElementById('f-name').value=r.name||''; document.getElementById('f-emoji').value=r.emoji||''; document.getElementById('f-main-ing').value=r.mainIng||''; document.getElementById('f-servings').value=r.servings||4; document.getElementById('f-prep').value=r.prep||''; document.getElementById('f-cook').value=r.cook||''; document.getElementById('f-tags').value=(r.tags||[]).join(', '); document.getElementById('f-notes').value=r.notes||''; document.getElementById('f-source').value=r.sourceUrl||'';
+    document.getElementById('f-name').value=r.name||''; document.getElementById('f-emoji').value=r.emoji||''; document.getElementById('f-main-ing').value=r.mainIng||''; document.getElementById('f-servings').value=r.servings||4; document.getElementById('f-prep').value=r.prep||''; document.getElementById('f-cook').value=r.cook||''; document.getElementById('f-tags').value=(r.tags||[]).join(', ');     document.getElementById('f-notes').value=r.notes||''; document.getElementById('f-source').value=r.sourceUrl||'';
+    document.getElementById('f-image').value=r.imageUrl||'';
+    if(r.imageUrl){ document.getElementById('f-image-img').src=r.imageUrl; document.getElementById('f-image-preview').style.display='block'; } else { document.getElementById('f-image-preview').style.display='none'; }
     (r.ingredients||[]).forEach(function(i){addIngRow(i.name,i.amount,i.unit);}); if(!(r.ingredients||[]).length) addIngRow();
     (r.steps||[]).forEach(function(s){addStepRow(s);}); if(!(r.steps||[]).length) addStepRow();
     document.getElementById('form-modal').classList.add('open');
@@ -541,6 +548,13 @@ var R = (function() {
 
   document.getElementById('form-modal').addEventListener('click',function(e){if(e.target===e.currentTarget)closeFormModal();});
   document.getElementById('view-modal').addEventListener('click',function(e){if(e.target===e.currentTarget)closeViewModal();});
+  document.getElementById('f-image').addEventListener('input', function() {
+    var url = this.value.trim();
+    var preview = document.getElementById('f-image-preview');
+    var img = document.getElementById('f-image-img');
+    if (url) { img.src=url; preview.style.display='block'; img.onerror=function(){preview.style.display='none';}; }
+    else { preview.style.display='none'; }
+  });
 
   return { doLogin,logout,openSettings,closeSettings,changePassword,setView,filterTag,filterIng,openView,closeViewModal,toggleFav,toggleFavView,openEdit,changeServings,openAddModal,openEditModal,closeFormModal,saveRecipe,askDelete,closeConfirm,confirmDelete,addIngRow,addStepRow,renumberSteps,renderGrid };
 })();
